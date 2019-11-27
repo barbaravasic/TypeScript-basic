@@ -1,4 +1,5 @@
 import axios from 'axios'
+import _ from 'lodash'
 import { User } from './User'
 import { Repo } from './Repo'
 
@@ -9,27 +10,28 @@ const instance = axios.create({
         'X-Custom-Header': 'foobar',
         'User-Agent': 'request'
     }
-  });
+});
 
-export class GithubApiService {
+class GithubApiService {
 
-    getUserInfo(userName: string, cb: (user: User) => any) {
+    async getUserInfo(userName: string) {
 
-        return instance.get(`${userName}`)
-        .then((response:any) => {
-            const user = new User(response.data)
-            cb(user)
-        })
+        const userResponse = await instance.get(`${userName}`)
 
+        const repos = await this.getRepos(userName)
+        const sortedRepos = _.sortBy(repos, (repo: Repo) => repo.size * -1)
+        const filteredRepos = _.take(sortedRepos, 5)
+
+        const user = new User(userResponse.data, filteredRepos)
+
+        return user
     }
 
-    getRepos(userName: string, cb: (repos: Repo[]) => any) {
+    async getRepos(userName: string) {
 
-        return instance.get(`${userName}/repos`)
-        .then((response:any) => {
-            let repoArray = response.data.map((repo: any) => new Repo(repo))
-            cb(repoArray)
-        })
-
+        const response = await instance.get(`${userName}/repos`)
+        return response.data.map((repo: any) => new Repo(repo))
     }
 }
+
+export const githubApiService = new GithubApiService()

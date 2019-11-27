@@ -1,16 +1,22 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var GithubApiService_1 = require("./GithubApiService");
-var lodash_1 = __importDefault(require("lodash"));
-var svc = new GithubApiService_1.GithubApiService();
-svc.getUserInfo('barbaravasic', function (user) {
-    svc.getRepos('barbaravasic', function (repos) {
-        var sortedRepos = lodash_1.default.sortBy(repos, function (repo) { return repo.size * -1; });
-        var filteredRepos = lodash_1.default.take(sortedRepos, 5);
-        user.repos = filteredRepos;
+const GithubApiService_1 = require("./GithubApiService");
+const printUser = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield GithubApiService_1.githubApiService.getUserInfo('barbaravasic');
         console.log(user);
-    });
+    }
+    catch (e) {
+        console.log(e);
+    }
 });
+printUser();
