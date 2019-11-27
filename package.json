@@ -11,11 +11,10 @@
   "author": "barbara <barbara.vasic0108@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "lodash": "^4.17.15",
-    "request": "^2.88.0"
+    "axios": "^0.19.0",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.149",
-    "@types/request": "^2.48.3"
+    "@types/lodash": "^4.14.149"
   }
 }

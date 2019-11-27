@@ -1,37 +1,35 @@
-import * as request from 'request'
+import axios from 'axios'
 import { User } from './User'
 import { Repo } from './Repo'
 
-const OPTIONS: any = {
+const instance = axios.create({
+    baseURL: 'https://api.github.com/users/',
+    timeout: 1000,
     headers: {
+        'X-Custom-Header': 'foobar',
         'User-Agent': 'request'
-    },
-    json: true
-}
+    }
+  });
 
 export class GithubApiService {
 
     getUserInfo(userName: string, cb: (user: User) => any) {
 
-        request.get(`https://api.github.com/users/${userName}`, OPTIONS, (error: any, response: any, body:any) => {
-
-        let user = new User(body)
-        cb(user)
-
+        return instance.get(`${userName}`)
+        .then((response:any) => {
+            const user = new User(response.data)
+            cb(user)
         })
 
     }
 
     getRepos(userName: string, cb: (repos: Repo[]) => any) {
 
-        request.get(`https://api.github.com/users/${userName}/repos`, OPTIONS, (error: any, response: any, body:any) => {
-
-            let user = new User(body)
-
-            let repoArray = body.map((repo: any) => new Repo(repo))
+        return instance.get(`${userName}/repos`)
+        .then((response:any) => {
+            let repoArray = response.data.map((repo: any) => new Repo(repo))
             cb(repoArray)
-    
-            })
+        })
 
     }
 }

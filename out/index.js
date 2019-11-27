@@ -9,7 +9,7 @@ var svc = new GithubApiService_1.GithubApiService();
 svc.getUserInfo('barbaravasic', function (user) {
     svc.getRepos('barbaravasic', function (repos) {
         var sortedRepos = lodash_1.default.sortBy(repos, function (repo) { return repo.size * -1; });
-        var filteredRepos = lodash_1.default.take(repos, 5);
+        var filteredRepos = lodash_1.default.take(sortedRepos, 5);
         user.repos = filteredRepos;
         console.log(user);
     });
